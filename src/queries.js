@@ -32,8 +32,59 @@ const PAYMENT_METHOD_TYPES = `
   }
 `;
 
+const RAMPABLE_ASSETS = `
+  query {
+    rampableAssets {
+      name
+      symbol
+      networks
+      contractAddress
+    }
+  }
+`;
+
+const RAMP_LIMITS = `
+  query {
+    rampLimits {
+      minimumDepositUsd
+      maximumDepositUsd
+      minimumWithdrawalUsd
+      maximumWithdrawalUsd
+      dailyLimitUsd
+    }
+  }
+`;
+
+const PAYMENT_REQUEST = `
+  query ($reference: String!) {
+    merchantPaymentRequest(reference: $reference) {
+      id
+      paymentType
+      hostedLink
+      amount
+      currency
+      reference
+      status
+    }
+  }
+`;
+
+const ACCOUNT = `
+  query {
+    account {
+      id
+      accountBalance
+      depositAddress
+    }
+  }
+`;
+
 module.exports = {
   AVAILABLE_COUNTRIES,
   MARKET_RATE,
-  PAYMENT_METHOD_TYPES
+  PAYMENT_METHOD_TYPES,
+  RAMPABLE_ASSETS,
+  RAMP_LIMITS,
+  PAYMENT_REQUEST,
+  ACCOUNT
 }
