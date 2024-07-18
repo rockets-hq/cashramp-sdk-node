@@ -17,7 +17,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/rockets-hq/cashramp-sdk-node"
   },
   "homepage": "https://cashramp.co/commerce"
 }
