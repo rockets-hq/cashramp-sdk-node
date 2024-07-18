@@ -1,4 +1,4 @@
-export const AVAILABLE_COUNTRIES = `
+const AVAILABLE_COUNTRIES = `
   query {
     availableCountries {
       id
@@ -7,3 +7,7 @@ export const AVAILABLE_COUNTRIES = `
     }
   }
 `;
+
+module.exports = {
+  AVAILABLE_COUNTRIES
+}
