@@ -8,6 +8,16 @@ const AVAILABLE_COUNTRIES = `
   }
 `;
 
+const MARKET_RATE = `
+  query ($countryCode: String!) {
+    marketRate(countryCode: $countryCode) {
+      depositRate
+      withdrawalRate
+    }
+  }
+`;
+
 module.exports = {
-  AVAILABLE_COUNTRIES
+  AVAILABLE_COUNTRIES,
+  MARKET_RATE
 }
