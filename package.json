@@ -1,0 +1,23 @@
+{
+  "name": "cashramp",
+  "version": "1.0.0",
+  "description": "Cashramp API NodeJS SDK",
+  "main": "index.js",
+  "keywords": [
+    "commerce",
+    "payments",
+    "cashramp",
+    "borderless",
+    "stablecoin",
+    "africa"
+  ],
+  "author": "Clinton Mbah <clinton@useaccrue.com> (https://clintonmbah.com)",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "homepage": "https://cashramp.co/commerce"
+}
