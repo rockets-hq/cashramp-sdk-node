@@ -14,7 +14,7 @@
   "author": "Clinton Mbah <clinton@useaccrue.com> (https://clintonmbah.com)",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "node-fetch": "2"
   },
   "devDependencies": {},
   "repository": {
