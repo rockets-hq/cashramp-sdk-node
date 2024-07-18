@@ -2,7 +2,7 @@
   "name": "cashramp",
   "version": "1.0.0",
   "description": "Cashramp API NodeJS SDK",
-  "main": "index.js",
+  "main": "src/index.js",
   "keywords": [
     "commerce",
     "payments",
@@ -13,7 +13,9 @@
   ],
   "author": "Clinton Mbah <clinton@useaccrue.com> (https://clintonmbah.com)",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
   "devDependencies": {},
   "repository": {
     "type": "git",
