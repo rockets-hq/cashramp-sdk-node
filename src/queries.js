@@ -17,7 +17,23 @@ const MARKET_RATE = `
   }
 `;
 
+const PAYMENT_METHOD_TYPES = `
+  query ($country: ID!) {
+    p2pPaymentMethodTypes(country: $country) {
+      id
+      identifier
+      label
+      fields {
+        label
+        identifier
+        required
+      }
+    }
+  }
+`;
+
 module.exports = {
   AVAILABLE_COUNTRIES,
-  MARKET_RATE
+  MARKET_RATE,
+  PAYMENT_METHOD_TYPES
 }

@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { AVAILABLE_COUNTRIES, MARKET_RATE } = require('./queries');
+const { AVAILABLE_COUNTRIES, MARKET_RATE, PAYMENT_METHOD_TYPES } = require('./queries');
 
 class Cashramp {
   constructor({ env, publicKey, secretKey }) {
@@ -19,13 +19,11 @@ class Cashramp {
     return this._performRequest({ name: "marketRate", query: MARKET_RATE, variables: { countryCode } })
   }
 
-  // PRIVATE METHODS
-
-  _setup() {
-    let host = "api.useaccrue.com";
-    if (this._env == "test") host = `staging.${host}`;
-    this._apiURL = `https://${host}/cashramp/api/graphql`;
+  async getPaymentMethodTypes({ country }) {
+    return this._performRequest({ name: "p2pPaymentMethodTypes", query: PAYMENT_METHOD_TYPES, variables: { country } })
   }
+
+  // PRIVATE METHODS
 
   async _performRequest({ name, query, variables }) {
     try {
@@ -53,6 +51,12 @@ class Cashramp {
       console.log(err);
       return { success: false, error: err.message || "Something went wrong." }
     }
+  }
+
+  _setup() {
+    let host = "api.useaccrue.com";
+    if (this._env == "test") host = `staging.${host}`;
+    this._apiURL = `https://${host}/cashramp/api/graphql`;
   }
 }
 
