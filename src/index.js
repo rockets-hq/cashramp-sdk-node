@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { AVAILABLE_COUNTRIES, MARKET_RATE, PAYMENT_METHOD_TYPES } = require('./queries');
+const { AVAILABLE_COUNTRIES, MARKET_RATE, PAYMENT_METHOD_TYPES, RAMPABLE_ASSETS, RAMP_LIMITS, PAYMENT_REQUEST, ACCOUNT } = require('./queries');
 
 class Cashramp {
   constructor({ env, publicKey, secretKey }) {
@@ -12,20 +12,36 @@ class Cashramp {
 
   // QUERIES
   async getAvailableCountries() {
-    return this._performRequest({ name: "availableCountries", query: AVAILABLE_COUNTRIES })
+    return this.sendRequest({ name: "availableCountries", query: AVAILABLE_COUNTRIES })
   }
 
   async getMarketRate({ countryCode }) {
-    return this._performRequest({ name: "marketRate", query: MARKET_RATE, variables: { countryCode } })
+    return this.sendRequest({ name: "marketRate", query: MARKET_RATE, variables: { countryCode } })
   }
 
   async getPaymentMethodTypes({ country }) {
-    return this._performRequest({ name: "p2pPaymentMethodTypes", query: PAYMENT_METHOD_TYPES, variables: { country } })
+    return this.sendRequest({ name: "p2pPaymentMethodTypes", query: PAYMENT_METHOD_TYPES, variables: { country } })
+  }
+
+  async getRampableAssets() {
+    return this.sendRequest({ name: "rampableAssets", query: RAMPABLE_ASSETS });
+  }
+
+  async getRampLimits() {
+    return this.sendRequest({ name: "rampLimits", query: RAMP_LIMITS })
+  }
+
+  async getPaymentRequest({ reference }) {
+    return this.sendRequest({ name: "merchantPaymentRequest", query: PAYMENT_REQUEST, variables: { reference } })
+  }
+
+  async getAccount() {
+    return this.sendRequest({ name: "account", query: ACCOUNT });
   }
 
   // PRIVATE METHODS
 
-  async _performRequest({ name, query, variables }) {
+  async sendRequest({ name, query, variables }) {
     try {
       const response = await fetch(this._apiURL, {
         method: "post",
