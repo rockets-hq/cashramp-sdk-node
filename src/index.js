@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { AVAILABLE_COUNTRIES, MARKET_RATE, PAYMENT_METHOD_TYPES, RAMPABLE_ASSETS, RAMP_LIMITS, PAYMENT_REQUEST, ACCOUNT } = require('./queries');
+const { CONFIRM_TRANSACTION } = require('./mutations');
 
 class Cashramp {
   constructor({ env, publicKey, secretKey }) {
@@ -39,8 +40,13 @@ class Cashramp {
     return this.sendRequest({ name: "account", query: ACCOUNT });
   }
 
-  // PRIVATE METHODS
+  // MUTATIONS
 
+  async confirmTransaction({ paymentRequest, transactionHash }) {
+    return this.sendRequest({ name: "confirmTransaction", query: CONFIRM_TRANSACTION, variables: { paymentRequest, transactionHash } })
+  }
+
+  // GENERAL
   async sendRequest({ name, query, variables }) {
     try {
       const response = await fetch(this._apiURL, {
@@ -60,14 +66,14 @@ class Cashramp {
         return { success: false, error: json.errors[0].message };
       } else {
         return { success: true, result: json.data[name] };
-
       }
-      console.log(json);
     } catch (err) {
       console.log(err);
       return { success: false, error: err.message || "Something went wrong." }
     }
   }
+
+  // PRIVATE METHODS
 
   _setup() {
     let host = "api.useaccrue.com";
