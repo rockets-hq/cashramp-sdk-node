@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { AVAILABLE_COUNTRIES, MARKET_RATE, PAYMENT_METHOD_TYPES, RAMPABLE_ASSETS, RAMP_LIMITS, PAYMENT_REQUEST, ACCOUNT } = require('./queries');
-const { CONFIRM_TRANSACTION } = require('./mutations');
+const { CONFIRM_TRANSACTION, INITIATE_HOSTED_PAYMENT, CANCEL_HOSTED_PAYMENT, CREATE_CUSTOMER, ADD_PAYMENT_METHOD, WITHDRAW_ONCHAIN } = require('./mutations');
 
 class Cashramp {
   constructor({ env, publicKey, secretKey }) {
@@ -44,6 +44,38 @@ class Cashramp {
 
   async confirmTransaction({ paymentRequest, transactionHash }) {
     return this.sendRequest({ name: "confirmTransaction", query: CONFIRM_TRANSACTION, variables: { paymentRequest, transactionHash } })
+  }
+
+  async initiateHostedPayment({ amount, currency, countryCode, email, paymentType, reference, firstName, lastName, redirectUrl }) {
+    return this.sendRequest({
+      name: "initiateHostedPayment", query: INITIATE_HOSTED_PAYMENT, variables: {
+        amount, currency, countryCode, email, paymentType, reference, firstName, lastName, redirectUrl
+      }
+    });
+  }
+
+  async cancelHostedPayment({ paymentRequest }) {
+    return this.sendRequest({
+      name: "cancelHostedPayment", query: CANCEL_HOSTED_PAYMENT, variables: {
+        paymentRequest
+      }
+    });
+  }
+
+  async createCustomer({ firstName, lastName, email, country }) {
+    return this.sendRequest({
+      name: "createCustomer", query: CREATE_CUSTOMER, variables: { firstName, lastName, email, country }
+    });
+  }
+
+  async addPaymentMethod({ customer, paymentMethodType, fields }) {
+    return this.sendRequest({
+      name: "addPaymentMethod", query: ADD_PAYMENT_METHOD, variables: { customer, paymentMethodType, fields }
+    });
+  }
+
+  async withdrawOnchain({ address, amountUsd }) {
+    return this.sendRequest({ name: "withdrawOnchain", query: WITHDRAW_ONCHAIN, variables: { address, amountUsd } });
   }
 
   // GENERAL
