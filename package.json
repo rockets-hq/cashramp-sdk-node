@@ -18,7 +18,7 @@
     "africa"
   ],
   "author": "Clinton Mbah <clinton@useaccrue.com> (https://clintonmbah.com)",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "node-fetch": "2.6.7"
   },
