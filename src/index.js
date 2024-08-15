@@ -13,16 +13,18 @@ const { CONFIRM_TRANSACTION, INITIATE_HOSTED_PAYMENT, CANCEL_HOSTED_PAYMENT, CRE
 
 class Cashramp {
   /**
-   * Cashramp SDK initializer
+   * Cashramp API client
+   * @constructor
    * @param {object} options Initialization options
    * @param {"test"|"live"} options.env Preferred Cashramp environment
-   * @param {string} options.publicKey Your Cashramp public API key
-   * @param {string} options.secretKey Your Cashramp secret API key
+   * @param {string} options.secretKey Your secret key
    */
-  constructor({ env, publicKey, secretKey }) {
+  constructor({ env, secretKey, }) {
     this._env = env || process.env.CASHRAMP_ENV || "live";
-    this._publicKey = publicKey || process.env.CASHRAMP_PUBLIC_KEY;
+    if (!["test", "live"].includes(this._env)) throw new Error(`"${this._env}" is not a valid env. Can either be "test" or "live".`)
+
     this._secretKey = secretKey || process.env.CASHRAMP_SECRET_KEY;
+    if (!this._secretKey) throw new Error("Please provide your API secret key.")
 
     this._setup();
   }
