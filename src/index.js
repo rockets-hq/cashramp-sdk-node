@@ -172,14 +172,14 @@ class Cashramp {
       query: INITIATE_HOSTED_PAYMENT,
       variables: {
         amount,
-        currency,
+        currency: currency || "usd",
         countryCode,
-        email,
         paymentType,
         reference,
+        redirectUrl,
         firstName,
         lastName,
-        redirectUrl,
+        email,
       },
     });
   }
@@ -243,7 +243,7 @@ class Cashramp {
    * Withdraw from your balance to an onchain wallet address
    * @param {object} options
    * @param {string} options.address The wallet address to withdraw to
-   * @param {string} options.amountUsd The amount to withdraw to the address provided
+   * @param {number} options.amountUsd The amount to withdraw to the address provided
    * @returns {CashrampResponse}
    */
   async withdrawOnchain({ address, amountUsd }) {
