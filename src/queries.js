@@ -79,7 +79,6 @@ const ACCOUNT = `
   }
 `;
 
-
 module.exports = {
   AVAILABLE_COUNTRIES,
   MARKET_RATE,
@@ -87,5 +86,5 @@ module.exports = {
   RAMPABLE_ASSETS,
   RAMP_LIMITS,
   PAYMENT_REQUEST,
-  ACCOUNT
-}
+  ACCOUNT,
+};

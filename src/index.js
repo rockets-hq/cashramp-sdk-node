@@ -6,10 +6,24 @@
  * @property {string} error The error message if the API request failed (ie. `success` = false)
  */
 
-
-const fetch = require('node-fetch');
-const { AVAILABLE_COUNTRIES, MARKET_RATE, PAYMENT_METHOD_TYPES, RAMPABLE_ASSETS, RAMP_LIMITS, PAYMENT_REQUEST, ACCOUNT } = require('./queries');
-const { CONFIRM_TRANSACTION, INITIATE_HOSTED_PAYMENT, CANCEL_HOSTED_PAYMENT, CREATE_CUSTOMER, ADD_PAYMENT_METHOD, WITHDRAW_ONCHAIN } = require('./mutations');
+const fetch = require("node-fetch");
+const {
+  AVAILABLE_COUNTRIES,
+  MARKET_RATE,
+  PAYMENT_METHOD_TYPES,
+  RAMPABLE_ASSETS,
+  RAMP_LIMITS,
+  PAYMENT_REQUEST,
+  ACCOUNT,
+} = require("./queries");
+const {
+  CONFIRM_TRANSACTION,
+  INITIATE_HOSTED_PAYMENT,
+  CANCEL_HOSTED_PAYMENT,
+  CREATE_CUSTOMER,
+  ADD_PAYMENT_METHOD,
+  WITHDRAW_ONCHAIN,
+} = require("./mutations");
 
 class Cashramp {
   /**
@@ -19,12 +33,16 @@ class Cashramp {
    * @param {"test"|"live"} options.env Preferred Cashramp environment
    * @param {string} options.secretKey Your secret key
    */
-  constructor({ env, secretKey, }) {
+  constructor({ env, secretKey }) {
     this._env = env || process.env.CASHRAMP_ENV || "live";
-    if (!["test", "live"].includes(this._env)) throw new Error(`"${this._env}" is not a valid env. Can either be "test" or "live".`)
+    if (!["test", "live"].includes(this._env))
+      throw new Error(
+        `"${this._env}" is not a valid env. Can either be "test" or "live".`
+      );
 
     this._secretKey = secretKey || process.env.CASHRAMP_SECRET_KEY;
-    if (!this._secretKey) throw new Error("Please provide your API secret key.")
+    if (!this._secretKey)
+      throw new Error("Please provide your API secret key.");
 
     this._setup();
   }
@@ -35,17 +53,24 @@ class Cashramp {
    * @returns {CashrampResponse} response.result { id: string, name: string, code: string }
    */
   async getAvailableCountries() {
-    return this.sendRequest({ name: "availableCountries", query: AVAILABLE_COUNTRIES })
+    return this.sendRequest({
+      name: "availableCountries",
+      query: AVAILABLE_COUNTRIES,
+    });
   }
 
   /**
-  * Fetch the Cashramp market rate for a country
-  * @param {object} options
-  * @param {string} options.countryCode The two-letter ISO 3166-1 country code
-  * @returns {CashrampResponse} response.result { depositRate: string, withdrawalRate: string }
-  */
+   * Fetch the Cashramp market rate for a country
+   * @param {object} options
+   * @param {string} options.countryCode The two-letter ISO 3166-1 country code
+   * @returns {CashrampResponse} response.result { depositRate: string, withdrawalRate: string }
+   */
   async getMarketRate({ countryCode }) {
-    return this.sendRequest({ name: "marketRate", query: MARKET_RATE, variables: { countryCode } })
+    return this.sendRequest({
+      name: "marketRate",
+      query: MARKET_RATE,
+      variables: { countryCode },
+    });
   }
 
   /**
@@ -55,7 +80,11 @@ class Cashramp {
    * @returns {CashrampResponse} response.result [{ id: string, identifier: string, fields: [{ label: string, identifier: string, required: boolean }]}]
    */
   async getPaymentMethodTypes({ country }) {
-    return this.sendRequest({ name: "p2pPaymentMethodTypes", query: PAYMENT_METHOD_TYPES, variables: { country } })
+    return this.sendRequest({
+      name: "p2pPaymentMethodTypes",
+      query: PAYMENT_METHOD_TYPES,
+      variables: { country },
+    });
   }
 
   /**
@@ -71,7 +100,7 @@ class Cashramp {
    * @returns {CashrampResponse} response.result { minimumDepositUsd: string, maximumDepositUsd: string, minimumWithdrawalUsd: string, maximumWithdrawalUsd: string, dailyLimitUsd: string }
    */
   async getRampLimits() {
-    return this.sendRequest({ name: "rampLimits", query: RAMP_LIMITS })
+    return this.sendRequest({ name: "rampLimits", query: RAMP_LIMITS });
   }
 
   /**
@@ -81,7 +110,11 @@ class Cashramp {
    * @returns {CashrampResponse}
    */
   async getPaymentRequest({ reference }) {
-    return this.sendRequest({ name: "merchantPaymentRequest", query: PAYMENT_REQUEST, variables: { reference } })
+    return this.sendRequest({
+      name: "merchantPaymentRequest",
+      query: PAYMENT_REQUEST,
+      variables: { reference },
+    });
   }
 
   /**
@@ -102,7 +135,11 @@ class Cashramp {
    * @returns {CashrampResponse}
    */
   async confirmTransaction({ paymentRequest, transactionHash }) {
-    return this.sendRequest({ name: "confirmTransaction", query: CONFIRM_TRANSACTION, variables: { paymentRequest, transactionHash } })
+    return this.sendRequest({
+      name: "confirmTransaction",
+      query: CONFIRM_TRANSACTION,
+      variables: { paymentRequest, transactionHash },
+    });
   }
 
   /**
@@ -119,11 +156,31 @@ class Cashramp {
    * @param {string} options.email The customer's email address
    * @returns {CashrampResponse} response.result { id: string, hostedLink: string, status: string }
    */
-  async initiateHostedPayment({ amount, currency, countryCode, paymentType, reference, redirectUrl, firstName, lastName, email }) {
+  async initiateHostedPayment({
+    amount,
+    currency,
+    countryCode,
+    paymentType,
+    reference,
+    redirectUrl,
+    firstName,
+    lastName,
+    email,
+  }) {
     return this.sendRequest({
-      name: "initiateHostedPayment", query: INITIATE_HOSTED_PAYMENT, variables: {
-        amount, currency, countryCode, email, paymentType, reference, firstName, lastName, redirectUrl
-      }
+      name: "initiateHostedPayment",
+      query: INITIATE_HOSTED_PAYMENT,
+      variables: {
+        amount,
+        currency,
+        countryCode,
+        email,
+        paymentType,
+        reference,
+        firstName,
+        lastName,
+        redirectUrl,
+      },
     });
   }
 
@@ -135,9 +192,11 @@ class Cashramp {
    */
   async cancelHostedPayment({ paymentRequest }) {
     return this.sendRequest({
-      name: "cancelHostedPayment", query: CANCEL_HOSTED_PAYMENT, variables: {
-        paymentRequest
-      }
+      name: "cancelHostedPayment",
+      query: CANCEL_HOSTED_PAYMENT,
+      variables: {
+        paymentRequest,
+      },
     });
   }
 
@@ -151,7 +210,9 @@ class Cashramp {
    */
   async createCustomer({ firstName, lastName, email, country }) {
     return this.sendRequest({
-      name: "createCustomer", query: CREATE_CUSTOMER, variables: { firstName, lastName, email, country }
+      name: "createCustomer",
+      query: CREATE_CUSTOMER,
+      variables: { firstName, lastName, email, country },
     });
   }
 
@@ -172,7 +233,9 @@ class Cashramp {
    */
   async addPaymentMethod({ customer, paymentMethodType, fields }) {
     return this.sendRequest({
-      name: "addPaymentMethod", query: ADD_PAYMENT_METHOD, variables: { customer, paymentMethodType, fields }
+      name: "addPaymentMethod",
+      query: ADD_PAYMENT_METHOD,
+      variables: { customer, paymentMethodType, fields },
     });
   }
 
@@ -184,7 +247,11 @@ class Cashramp {
    * @returns {CashrampResponse}
    */
   async withdrawOnchain({ address, amountUsd }) {
-    return this.sendRequest({ name: "withdrawOnchain", query: WITHDRAW_ONCHAIN, variables: { address, amountUsd } });
+    return this.sendRequest({
+      name: "withdrawOnchain",
+      query: WITHDRAW_ONCHAIN,
+      variables: { address, amountUsd },
+    });
   }
 
   // GENERAL
@@ -202,12 +269,12 @@ class Cashramp {
         method: "post",
         body: JSON.stringify({
           query,
-          variables
+          variables,
         }),
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this._secretKey}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this._secretKey}`,
+        },
       });
 
       const json = await response.json();
@@ -218,7 +285,7 @@ class Cashramp {
       }
     } catch (err) {
       console.log(err);
-      return { success: false, error: err.message || "Something went wrong." }
+      return { success: false, error: err.message || "Something went wrong." };
     }
   }
 
