@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node: "20.x"
+          node-version: "20"
 
       - name: Bump package version
         run: |
@@ -18,11 +18,13 @@ jobs:
 
           npm version patch
 
-      - name: Push updated package to NPM
+      - name: Push updated package + tag to GitHub
         run: git push -f && git push --tags -f
         env:
           GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
 
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish package to NPM
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
