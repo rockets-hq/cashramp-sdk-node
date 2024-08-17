@@ -21,7 +21,7 @@ jobs:
       - name: Push updated package to NPM
         run: git push -f && git push --tags -f
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
 
       - run: npm publish
         env:
