@@ -1,0 +1,28 @@
+name: Publish NPM Package
+on:
+  push:
+    branches: main
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node: "20.x"
+
+      - name: Bump package version
+        run: |
+          git config --global user.email "${{github.actor}}@users.noreply.github.com"
+          git config --global user.name "${{github.actor}}"
+
+          npm version patch
+
+      - name: Push updated package to NPM
+        run: git push -f && git push --tags -f
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
+
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
