@@ -19,7 +19,7 @@ jobs:
           npm version patch
 
       - name: Push updated package + tag to GitHub
-        run: git push -f && git push --tags -f
+        run: git push && git push --tags
         env:
           GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
 
