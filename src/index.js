@@ -118,7 +118,7 @@ class Cashramp {
   }
 
   /**
-   * Fetch your account's balance & deposit address
+   * Fetch the account information for the authenticated user.
    * @returns {CashrampResponse} response.result { accountBalance: string, depositAddress: string }
    */
   async getAccount() {
@@ -185,7 +185,7 @@ class Cashramp {
   }
 
   /**
-   * Cancel an initiated payment request
+   * Cancel an ongoing payment request
    * @param {object} options
    * @param {string} options.paymentRequest The payment request's global ID
    * @returns {CashrampResponse}
@@ -201,7 +201,7 @@ class Cashramp {
   }
 
   /**
-   * Create a customer
+   * Create a new customer profile
    * @param {object} options
    * @param {string} options.firstName The customer's first name
    * @param {string} options.lastName The customer's last name
