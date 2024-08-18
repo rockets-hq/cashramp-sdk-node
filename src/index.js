@@ -277,11 +277,15 @@ class Cashramp {
         },
       });
 
-      const json = await response.json();
-      if (json.errors) {
-        return { success: false, error: json.errors[0].message };
+      if (response.status == 200) {
+        const json = await response.json();
+        if (json.errors) {
+          return { success: false, error: json.errors[0].message };
+        } else {
+          return { success: true, result: json.data[name] };
+        }
       } else {
-        return { success: true, result: json.data[name] };
+        return { success: false, error: response.statusText };
       }
     } catch (err) {
       console.log(err);
