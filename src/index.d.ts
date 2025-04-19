@@ -1,5 +1,4 @@
-
-declare module 'cashramp-sdk-node' {
+declare module 'cashramp' {
 
   /**
    * A response from the Cashramp API
