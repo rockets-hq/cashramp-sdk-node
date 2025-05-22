@@ -25,6 +25,9 @@ const {
   CREATE_CUSTOMER,
   ADD_PAYMENT_METHOD,
   WITHDRAW_ONCHAIN,
+  INITIATE_RAMP_QUOTE_DEPOSIT,
+  MARK_DEPOSIT_AS_PAID,
+  CANCEL_DEPOSIT,
 } = require("./mutations");
 
 class Cashramp {
@@ -231,6 +234,50 @@ class Cashramp {
       variables: {
         paymentRequest,
       },
+    });
+  }
+
+  /**
+   * Initiate a Ramp Quote deposit
+   * @param {object} options
+   * @param {string} options.rampQuote The ramp quote's global ID
+   * @param {string} options.reference An optional reference for the payment request
+   * @returns {CashrampResponse} response.result { id: string, status: string, agent: string, paymentDetails: string, exchangeRate: string, amountLocal: string, amountUsd: string, expiresAt: string }
+   */
+  async initiateRampQuoteDeposit({ rampQuote, reference }) {
+    return this.sendRequest({
+      name: "initiateRampQuoteDeposit",
+      query: INITIATE_RAMP_QUOTE_DEPOSIT,
+      variables: { rampQuote, reference },
+    });
+  }
+
+  /**
+   * Mark a deposit payment request as paid
+   * @param {object} options
+   * @param {string} options.paymentRequest The payment request's global ID
+   * @param {string} options.receipt The receipt of the payment request
+   * @returns {CashrampResponse}
+   */
+  async markDepositAsPaid({ paymentRequest, receipt }) {
+    return this.sendRequest({
+      name: "markDepositAsPaid",
+      query: MARK_DEPOSIT_AS_PAID,
+      variables: { paymentRequest, receipt },
+    });
+  }
+
+  /**
+   * Cancel a deposit payment request
+   * @param {object} options
+   * @param {string} options.paymentRequest The payment request's global ID
+   * @returns {CashrampResponse}
+   */
+  async cancelDeposit({ paymentRequest }) {
+    return this.sendRequest({
+      name: "cancelDeposit",
+      query: CANCEL_DEPOSIT,
+      variables: { paymentRequest },
     });
   }
 

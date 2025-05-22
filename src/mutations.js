@@ -58,6 +58,33 @@ const WITHDRAW_ONCHAIN = `
   }
 `;
 
+const INITIATE_RAMP_QUOTE_DEPOSIT = `
+  mutation ($rampQuote: ID!, $reference: String) {
+    initiateRampQuoteDeposit(rampQuote: $rampQuote, reference: $reference) {
+      id
+      status
+      agent
+      paymentDetails
+      exchangeRate
+      amountLocal
+      amountUsd
+      expiresAt
+    }
+  }
+`;
+
+const MARK_DEPOSIT_AS_PAID = `
+  mutation ($paymentRequest: ID!, $receipt: String) {
+    markDepositAsPaid(paymentRequest: $paymentRequest, receipt: $receipt)
+  }
+`;
+
+const CANCEL_DEPOSIT = `
+  mutation ($paymentRequest: ID!) {
+    cancelDeposit(paymentRequest: $paymentRequest)
+  }
+`;
+
 module.exports = {
   CONFIRM_TRANSACTION,
   INITIATE_HOSTED_PAYMENT,
@@ -65,4 +92,7 @@ module.exports = {
   CREATE_CUSTOMER,
   ADD_PAYMENT_METHOD,
   WITHDRAW_ONCHAIN,
+  INITIATE_RAMP_QUOTE_DEPOSIT,
+  MARK_DEPOSIT_AS_PAID,
+  CANCEL_DEPOSIT,
 };

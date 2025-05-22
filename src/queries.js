@@ -89,7 +89,7 @@ const RAMP_QUOTE = `
 `;
 
 const REFRESH_RAMP_QUOTE = `
-  mutation ($rampQuote: ID!, $amount: Decimal!) {
+  query ($rampQuote: ID!, $amount: Decimal) {
     refreshRampQuote(rampQuote: $rampQuote, amount: $amount) {
       id
       exchangeRate

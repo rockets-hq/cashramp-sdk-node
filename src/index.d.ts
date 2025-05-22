@@ -169,6 +169,35 @@ declare module 'cashramp' {
     paymentRequest: string;
   }
 
+  /** Represents a Ramp Quote deposit */
+  export interface DirectRampDeposit {
+    id: string;
+    status: string;
+    agent: string;
+    paymentDetails: string;
+    exchangeRate: number;
+    amountLocal: number;
+    amountUsd: number;
+    expiresAt: string;
+  }
+
+  /** Options for initiating a Ramp Quote deposit */
+  export interface InitiateRampQuoteDepositOptions {
+    rampQuote: string;
+    reference: string;
+  }
+
+  /** Options for marking a deposit payment request as paid */
+  export interface MarkDepositAsPaidOptions {
+    paymentRequest: string;
+    receipt: string;
+  }
+
+  /** Options for canceling a deposit payment request */
+  export interface CancelDepositOptions {
+    paymentRequest: string;
+  }
+
   /** Options for creating a customer */
   export interface CreateCustomerOptions {
     /** The customer's first name */
@@ -301,6 +330,27 @@ declare module 'cashramp' {
      * @returns Promise resolving to CashrampResponse
      */
     cancelHostedPayment(options: CancelHostedPaymentOptions): Promise<CashrampResponse>;
+
+    /**
+     * Initiate a Ramp Quote deposit
+     * @param options Options for initiating a Ramp Quote deposit
+     * @returns Promise resolving to CashrampResponse with DirectRamp
+     */
+    initiateRampQuoteDeposit(options: InitiateRampQuoteDepositOptions): Promise<CashrampResponse<DirectRampDeposit>>;
+
+    /**
+     * Mark a deposit payment request as paid
+     * @param options Options for marking a deposit payment request as paid
+     * @returns Promise resolving to CashrampResponse
+     */
+    markDepositAsPaid(options: MarkDepositAsPaidOptions): Promise<CashrampResponse>;
+
+    /**
+     * Cancel a deposit payment request
+     * @param options Options for canceling a deposit payment request
+     * @returns Promise resolving to CashrampResponse
+     */
+    cancelDeposit(options: CancelDepositOptions): Promise<CashrampResponse>;
 
     /**
      * Create a new customer profile
