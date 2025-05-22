@@ -184,4 +184,40 @@ describe("Cashramp queries", () => {
     const mockCallIndex = fetch.mock.calls.length - 1;
     expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
   });
+
+  test("it should get a Ramp Quote", async () => {
+    const name = "rampQuote";
+    const result = { id: "1", exchangeRate: "1000" };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.getRampQuote({
+      customer: "1",
+      amount: 100,
+      currency: "usd",
+      paymentMethodType: "mpesa",
+    });
+
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+  });
+
+  test("it should refresh a Ramp Quote", async () => {
+    const name = "refreshRampQuote";
+    const result = { id: "1", exchangeRate: "1000" };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.refreshRampQuote({
+      rampQuote: "1",
+      amount: 100,
+    });
+
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+  });
 });

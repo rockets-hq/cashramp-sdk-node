@@ -56,6 +56,8 @@ if (response.success) {
 - `getPaymentMethodTypes({ country })`: Fetch the payment method types available in a country
 - `getRampableAssets()`: Fetch the assets you can on/offramp with the Onchain Ramp
 - `getRampLimits()`: Fetch the Onchain Ramp limits
+- `getRampQuote({ customer, amount, currency, paymentMethodType })`: Request a new Ramp Quote for a Direct Ramp payment
+- `refreshRampQuote({ rampQuote, amount })`: Refresh a Ramp Quote for a Direct Ramp payment
 - `getPaymentRequest({ reference })`: Fetch the details of a payment request
 - `getAccount()`: Fetch the account information for the authenticated user.
 
@@ -66,7 +68,7 @@ if (response.success) {
 - `cancelHostedPayment({ paymentRequest })`: Cancel an ongoing payment request
 - `createCustomer({ firstName, lastName, email, country })`: Create a new customer profile
 - `addPaymentMethod({ customer, paymentMethodType, fields })`: Add a payment method for an existing customer
-- `withdrawOnchain({ address, amountUsd })`:  Withdraw from your balance to an onchain wallet address
+- `withdrawOnchain({ address, amountUsd })`: Withdraw from your balance to an onchain wallet address
 
 ## Custom Queries
 

@@ -79,6 +79,24 @@ const ACCOUNT = `
   }
 `;
 
+const RAMP_QUOTE = `
+  query ($customer: ID!, $amount: Decimal!, $currency: P2PPaymentCurrency!, $paymentMethodType: String!) {
+    rampQuote(customer: $customer, amount: $amount, currency: $currency, paymentMethodType: $paymentMethodType) {
+      id
+      exchangeRate
+    }
+  }
+`;
+
+const REFRESH_RAMP_QUOTE = `
+  mutation ($rampQuote: ID!, $amount: Decimal!) {
+    refreshRampQuote(rampQuote: $rampQuote, amount: $amount) {
+      id
+      exchangeRate
+    }
+  }
+`;
+
 module.exports = {
   AVAILABLE_COUNTRIES,
   MARKET_RATE,
@@ -87,4 +105,6 @@ module.exports = {
   RAMP_LIMITS,
   PAYMENT_REQUEST,
   ACCOUNT,
+  RAMP_QUOTE,
+  REFRESH_RAMP_QUOTE,
 };

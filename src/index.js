@@ -14,6 +14,8 @@ const {
   RAMPABLE_ASSETS,
   RAMP_LIMITS,
   PAYMENT_REQUEST,
+  RAMP_QUOTE,
+  REFRESH_RAMP_QUOTE,
   ACCOUNT,
 } = require("./queries");
 const {
@@ -114,6 +116,38 @@ class Cashramp {
       name: "merchantPaymentRequest",
       query: PAYMENT_REQUEST,
       variables: { reference },
+    });
+  }
+
+  /**
+   * Request a new Ramp Quote for a Direct Ramp payment
+   * @param {object} options
+   * @param {string} options.customer The customer's global ID
+   * @param {number} options.amount The amount to ramp
+   * @param {"local_currency"|"usd"} options.currency The currency for the payment request
+   * @param {string} options.paymentMethodType The payment method type's global ID
+   * @returns {CashrampResponse} response.result { id: string, exchangeRate: string }
+   */
+  async getRampQuote({ customer, amount, currency, paymentMethodType }) {
+    return this.sendRequest({
+      name: "rampQuote",
+      query: RAMP_QUOTE,
+      variables: { customer, amount, currency, paymentMethodType },
+    });
+  }
+
+  /**
+   * Refresh a Ramp Quote for a Direct Ramp payment
+   * @param {object} options
+   * @param {string} options.rampQuote The ramp quote's global ID
+   * @param {number} options.amount The amount to ramp
+   * @returns {CashrampResponse} response.result { id: string, exchangeRate: string }
+   */
+  async refreshRampQuote({ rampQuote, amount }) {
+    return this.sendRequest({
+      name: "refreshRampQuote",
+      query: REFRESH_RAMP_QUOTE,
+      variables: { rampQuote, amount },
     });
   }
 

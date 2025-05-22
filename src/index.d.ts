@@ -57,6 +57,26 @@ declare module 'cashramp' {
     contractAddress?: Record<string, string>;
   }
 
+  /** Represents a Ramp Quote for a Direct Ramp payment */
+  export interface RampQuote {
+    id: string;
+    exchangeRate: string;
+  }
+
+  /** Options for requesting a Ramp Quote */
+  export interface RampQuoteOptions {
+    customer: string;
+    amount: number;
+    currency: PaymentCurrency;
+    paymentMethodType: string;
+  }
+
+  /** Options for refreshing a Ramp Quote */
+  export interface RefreshRampQuoteOptions {
+    rampQuote: string;
+    amount: number;
+  }
+
   /** Represents the Onchain Ramp limits */
   export interface RampLimits {
     minimumDepositUsd: string;
@@ -240,6 +260,20 @@ declare module 'cashramp' {
      * @returns Promise resolving to CashrampResponse with PaymentRequestDetails
      */
     getPaymentRequest(options: GetPaymentRequestOptions): Promise<CashrampResponse<PaymentRequestDetails>>;
+
+    /**
+     * Request a new Ramp Quote for a Direct Ramp payment
+     * @param options Options for requesting a Ramp Quote
+     * @returns Promise resolving to CashrampResponse with RampQuote
+     */
+    getRampQuote(options: RampQuoteOptions): Promise<CashrampResponse<RampQuote>>;
+
+    /**
+     * Refresh a Ramp Quote for a Direct Ramp payment
+     * @param options Options for refreshing a Ramp Quote
+     * @returns Promise resolving to CashrampResponse with RampQuote
+     */
+    refreshRampQuote(options: RefreshRampQuoteOptions): Promise<CashrampResponse<RampQuote>>;
 
     /**
      * Fetch the account information for the authenticated user.
