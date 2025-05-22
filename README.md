@@ -69,6 +69,9 @@ if (response.success) {
 - `createCustomer({ firstName, lastName, email, country })`: Create a new customer profile
 - `addPaymentMethod({ customer, paymentMethodType, fields })`: Add a payment method for an existing customer
 - `withdrawOnchain({ address, amountUsd })`: Withdraw from your balance to an onchain wallet address
+- `initiateRampQuoteDeposit({ rampQuote, reference })`: Initiate a Ramp Quote deposit
+- `markDepositAsPaid({ paymentRequest, receipt })`: Mark a deposit payment request as paid
+- `cancelDeposit({ paymentRequest })`: Cancel a deposit payment request
 
 ## Custom Queries
 
