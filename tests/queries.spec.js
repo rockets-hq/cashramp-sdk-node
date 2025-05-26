@@ -220,4 +220,28 @@ describe("Cashramp queries", () => {
     const mockCallIndex = fetch.mock.calls.length - 1;
     expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
   });
+
+  test("it should get an onchain withdrawal", async () => {
+    const name = "onchainWithdrawal";
+    const result = {
+      quantity: "100",
+      symbol: "USDT",
+      network: "OP",
+      address: "0x17A08127364A7C897e557611176A73Eef5642C81",
+      txhash: "0x17A08127364A7C897e557611176A73Eef5642C81",
+      txhashUrl: "https://opscan.io/tx/0x17A08127364A7C897e557611176A73Eef5642C81",
+      fee: "1",
+      status: "completed",
+      createdAt: "2021-01-01T00:00:00Z",
+    };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.getOnchainWithdrawal({ withdrawalId: "1" });
+
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+  });
 });
