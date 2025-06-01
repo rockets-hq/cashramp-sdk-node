@@ -128,14 +128,15 @@ class Cashramp {
    * @param {string} options.customer The customer's global ID
    * @param {number} options.amount The amount to ramp
    * @param {"local_currency"|"usd"} options.currency The currency for the payment request
+   * @param {"deposit"|"withdrawal"} options.paymentType The type of payment request
    * @param {string} options.paymentMethodType The payment method type's global ID
-   * @returns {CashrampResponse} response.result { id: string, exchangeRate: string }
+   * @returns {CashrampResponse} response.result { id: string, exchangeRate: string, paymentType: string }
    */
-  async getRampQuote({ customer, amount, currency, paymentMethodType }) {
+  async getRampQuote({ customer, amount, currency, paymentType, paymentMethodType }) {
     return this.sendRequest({
       name: "rampQuote",
       query: RAMP_QUOTE,
-      variables: { customer, amount, currency, paymentMethodType },
+      variables: { customer, amount, currency, paymentType: paymentType || "deposit", paymentMethodType },
     });
   }
 

@@ -61,6 +61,7 @@ declare module 'cashramp' {
   export interface RampQuote {
     id: string;
     exchangeRate: string;
+    paymentType: PaymentType;
   }
 
   /** Options for requesting a Ramp Quote */
@@ -68,6 +69,7 @@ declare module 'cashramp' {
     customer: string;
     amount: number;
     currency: PaymentCurrency;
+    paymentType: PaymentType;
     paymentMethodType: string;
   }
 
@@ -91,11 +93,16 @@ declare module 'cashramp' {
     USD = 'usd'
   }
 
+  export enum PaymentType {
+    DEPOSIT = 'deposit',
+    WITHDRAWAL = 'withdrawal'
+  }
+
   /** Represents the details of a payment request */
   export interface PaymentRequestDetails {
     id: string,
     status: string,
-    paymentType: string,
+    paymentType: PaymentType,
     currency: PaymentCurrency,
     amount: number,
     redirectUrl: string,
@@ -150,7 +157,7 @@ declare module 'cashramp' {
     /** The two-letter ISO 3166-1 country code */
     countryCode: string;
     /** The type of payment request */
-    paymentType: 'deposit' | 'withdrawal';
+    paymentType: PaymentType;
     /** An optional reference for the payment request */
     reference?: string;
     /** An optional metadata object for the payment request echoed in webhooks */
@@ -171,8 +178,8 @@ declare module 'cashramp' {
     paymentRequest: string;
   }
 
-  /** Represents a Ramp Quote deposit */
-  export interface DirectRampDeposit {
+  /** Represents a Ramp Quote for a Direct Ramp payment */
+  export interface DirectRamp {
     id: string;
     status: string;
     agent: string;
