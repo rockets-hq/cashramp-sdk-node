@@ -191,4 +191,38 @@ describe("Cashramp mutations", () => {
       JSON.stringify(payload)
     );
   });
+
+  test("it should initiate a Ramp Quote withdrawal", async () => {
+    const name = "initiateRampQuoteWithdrawal";
+    const result = { id: "1" };
+    const payload = { rampQuote: "1", paymentMethod: "1", reference: "test_ref_1" };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.initiateRampQuoteWithdrawal(payload);
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(
+      JSON.stringify(payload)
+    );
+  });
+
+  test("it should mark a withdrawal payment request as received", async () => {
+    const name = "markWithdrawalAsReceived";
+    const result = true;
+    const payload = { paymentRequest: "1" };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.markWithdrawalAsReceived(payload);
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(
+      JSON.stringify(payload)
+    );
+  });
 });

@@ -73,9 +73,29 @@ const INITIATE_RAMP_QUOTE_DEPOSIT = `
   }
 `;
 
+const INITIATE_RAMP_QUOTE_WITHDRAWAL = `
+  mutation ($rampQuote: ID!, $paymentMethod: ID!, $reference: String) {
+    initiateRampQuoteWithdrawal(rampQuote: $rampQuote, paymentMethod: $paymentMethod, reference: $reference) {
+      id
+      status
+      agent
+      paymentDetails
+      exchangeRate
+      amountLocal
+      amountUsd
+    }
+  }
+`;
+
 const MARK_DEPOSIT_AS_PAID = `
   mutation ($paymentRequest: ID!, $receipt: String) {
     markDepositAsPaid(paymentRequest: $paymentRequest, receipt: $receipt)
+  }
+`;
+
+const MARK_WITHDRAWAL_AS_RECEIVED = `
+  mutation ($paymentRequest: ID!) {
+    markWithdrawalAsReceived(paymentRequest: $paymentRequest)
   }
 `;
 
@@ -93,6 +113,8 @@ module.exports = {
   ADD_PAYMENT_METHOD,
   WITHDRAW_ONCHAIN,
   INITIATE_RAMP_QUOTE_DEPOSIT,
+  INITIATE_RAMP_QUOTE_WITHDRAWAL,
   MARK_DEPOSIT_AS_PAID,
+  MARK_WITHDRAWAL_AS_RECEIVED,
   CANCEL_DEPOSIT,
 };

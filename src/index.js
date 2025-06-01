@@ -26,6 +26,8 @@ const {
   ADD_PAYMENT_METHOD,
   WITHDRAW_ONCHAIN,
   INITIATE_RAMP_QUOTE_DEPOSIT,
+  INITIATE_RAMP_QUOTE_WITHDRAWAL,
+  MARK_WITHDRAWAL_AS_RECEIVED,
   MARK_DEPOSIT_AS_PAID,
   CANCEL_DEPOSIT,
 } = require("./mutations");
@@ -253,6 +255,36 @@ class Cashramp {
       name: "initiateRampQuoteDeposit",
       query: INITIATE_RAMP_QUOTE_DEPOSIT,
       variables: { rampQuote, reference },
+    });
+  }
+
+  /**
+   * Initiate a Ramp Quote withdrawal
+   * @param {object} options
+   * @param {string} options.rampQuote The ramp quote's global ID
+   * @param {string} options.paymentMethod The payment method's global ID
+   * @param {string} options.reference An optional reference for the payment request
+   * @returns {CashrampResponse} response.result { id: string, status: string, agent: string, paymentDetails: string, exchangeRate: string, amountLocal: string, amountUsd: string }
+   */
+  async initiateRampQuoteWithdrawal({ rampQuote, paymentMethod, reference }) {
+    return this.sendRequest({
+      name: "initiateRampQuoteWithdrawal",
+      query: INITIATE_RAMP_QUOTE_WITHDRAWAL,
+      variables: { rampQuote, paymentMethod, reference },
+    });
+  }
+
+  /**
+   * Mark a withdrawal payment request as received
+   * @param {object} options
+   * @param {string} options.paymentRequest The payment request's global ID
+   * @returns {CashrampResponse}
+   */
+  async markWithdrawalAsReceived({ paymentRequest }) {
+    return this.sendRequest({
+      name: "markWithdrawalAsReceived",
+      query: MARK_WITHDRAWAL_AS_RECEIVED,
+      variables: { paymentRequest },
     });
   }
 

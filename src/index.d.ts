@@ -196,10 +196,22 @@ declare module 'cashramp' {
     reference: string;
   }
 
+  /** Options for initiating a Ramp Quote withdrawal */
+  export interface InitiateRampQuoteWithdrawalOptions {
+    rampQuote: string;
+    paymentMethod: string;
+    reference: string;
+  }
+
   /** Options for marking a deposit payment request as paid */
   export interface MarkDepositAsPaidOptions {
     paymentRequest: string;
     receipt: string;
+  }
+
+  /** Options for marking a withdrawal payment request as received */
+  export interface MarkWithdrawalAsReceivedOptions {
+    paymentRequest: string;
   }
 
   /** Options for canceling a deposit payment request */
@@ -345,7 +357,21 @@ declare module 'cashramp' {
      * @param options Options for initiating a Ramp Quote deposit
      * @returns Promise resolving to CashrampResponse with DirectRamp
      */
-    initiateRampQuoteDeposit(options: InitiateRampQuoteDepositOptions): Promise<CashrampResponse<DirectRampDeposit>>;
+    initiateRampQuoteDeposit(options: InitiateRampQuoteDepositOptions): Promise<CashrampResponse<DirectRamp>>;
+
+    /**
+     * Initiate a Ramp Quote withdrawal
+     * @param options Options for initiating a Ramp Quote withdrawal
+     * @returns Promise resolving to CashrampResponse with DirectRamp
+     */
+    initiateRampQuoteWithdrawal(options: InitiateRampQuoteWithdrawalOptions): Promise<CashrampResponse<DirectRamp>>;
+
+    /**
+     * Mark a withdrawal payment request as received
+     * @param options Options for marking a withdrawal payment request as received
+     * @returns Promise resolving to CashrampResponse
+     */
+    markWithdrawalAsReceived(options: MarkWithdrawalAsReceivedOptions): Promise<CashrampResponse>;
 
     /**
      * Mark a deposit payment request as paid
