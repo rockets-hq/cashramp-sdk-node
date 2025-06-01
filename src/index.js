@@ -312,7 +312,7 @@ class Cashramp {
    * Add a payment method for an existing customer
    * @param {object} options
    * @param {string} options.customer The customer's global ID
-   * @param {string} options.p2pPaymentMethodType The payment method type's global ID
+   * @param {string} options.paymentMethodType Identifier of the payment method type to add
    * @param {[PaymentMethodField]} options.fields The fields of the payment method
    * @returns {CashrampResponse}
    */

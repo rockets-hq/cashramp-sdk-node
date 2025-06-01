@@ -37,8 +37,8 @@ const CREATE_CUSTOMER = `
 `;
 
 const ADD_PAYMENT_METHOD = `
-  mutation ($customer: ID!, $paymentMethodType: ID!, $fields: [P2PPaymentMethodFieldInput!]!) {
-    addPaymentMethod(customer: $customer, p2pPaymentMethodType: $paymentMethodType, fields: $fields) {
+  mutation ($customer: ID!, $paymentMethodType: String!, $fields: [P2PPaymentMethodFieldInput!]!) {
+    addPaymentMethod(customer: $customer, paymentMethodType: $paymentMethodType, fields: $fields) {
       id
       value
       fields {

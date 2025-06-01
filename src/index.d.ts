@@ -229,8 +229,8 @@ declare module 'cashramp' {
   export interface AddPaymentMethodOptions {
     /** The customer's global ID */
     customer: string;
-    /** The payment method type's global ID */
-    p2pPaymentMethodType: string;
+    /** The payment method type's identifier */
+    paymentMethodType: string;
     /** The fields of the payment method */
     fields: PaymentMethodFieldValue[];
   }
