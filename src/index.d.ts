@@ -153,6 +153,8 @@ declare module 'cashramp' {
     paymentType: 'deposit' | 'withdrawal';
     /** An optional reference for the payment request */
     reference?: string;
+    /** An optional metadata object for the payment request echoed in webhooks */
+    metadata?: Record<string, any>;
     /** An optional URL to redirect to after completion */
     redirectUrl?: string;
     /** The customer's first name */

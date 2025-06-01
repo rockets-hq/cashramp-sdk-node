@@ -187,6 +187,7 @@ class Cashramp {
    * @param {string} options.countryCode The two-letter ISO 3166-1 country code
    * @param {"deposit"|"withdrawal"} options.paymentType The type of payment request
    * @param {string} options.reference An optional reference for the payment request
+   * @param {object} options.metadata An optional metadata object for the payment request echoed in webhooks
    * @param {string} options.redirectUrl An optional URL to redirect to after the payment request is completed
    * @param {string} options.firstName The customer's first name
    * @param {string} options.lastName The customer's last name
@@ -199,6 +200,7 @@ class Cashramp {
     countryCode,
     paymentType,
     reference,
+    metadata,
     redirectUrl,
     firstName,
     lastName,
@@ -213,6 +215,7 @@ class Cashramp {
         countryCode,
         paymentType,
         reference,
+        metadata,
         redirectUrl,
         firstName,
         lastName,
