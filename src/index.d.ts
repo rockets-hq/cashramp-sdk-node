@@ -71,12 +71,14 @@ declare module 'cashramp' {
     currency: PaymentCurrency;
     paymentType: PaymentType;
     paymentMethodType: string;
+    /** Optional ISO 3166-2 country code (e.g 'GH', 'NG') */
+    country?: string;
   }
 
   /** Options for refreshing a Ramp Quote */
   export interface RefreshRampQuoteOptions {
     rampQuote: string;
-    amount: number;
+    amount?: number;
   }
 
   /** Represents the Onchain Ramp limits */
@@ -193,14 +195,18 @@ declare module 'cashramp' {
   /** Options for initiating a Ramp Quote deposit */
   export interface InitiateRampQuoteDepositOptions {
     rampQuote: string;
-    reference: string;
+    reference?: string;
+    /** Customer's phone number if paying via MoMo */
+    phoneNumber?: string;
+    /** Customer's bank account number if paying via bank */
+    bankAccountNumber?: string;
   }
 
   /** Options for initiating a Ramp Quote withdrawal */
   export interface InitiateRampQuoteWithdrawalOptions {
     rampQuote: string;
     paymentMethod: string;
-    reference: string;
+    reference?: string;
   }
 
   /** Options for marking a deposit payment request as paid */
@@ -418,4 +424,4 @@ declare module 'cashramp' {
 
   // Export the class as the default export
   export default Cashramp;
-} 
+}

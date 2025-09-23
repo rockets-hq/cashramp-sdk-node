@@ -80,8 +80,8 @@ const ACCOUNT = `
 `;
 
 const RAMP_QUOTE = `
-  query ($customer: ID!, $amount: Decimal!, $currency: P2PPaymentCurrency!, $paymentType: PaymentTypeType, $paymentMethodType: String!) {
-    rampQuote(customer: $customer, amount: $amount, currency: $currency, paymentType: $paymentType, paymentMethodType: $paymentMethodType) {
+  query ($customer: ID!, $amount: Decimal!, $currency: P2PPaymentCurrency!, $paymentType: PaymentType, $paymentMethodType: String!, $country: String) {
+    rampQuote(customer: $customer, amount: $amount, currency: $currency, paymentType: $paymentType, paymentMethodType: $paymentMethodType, country: $country) {
       id
       exchangeRate
       paymentType
@@ -89,14 +89,7 @@ const RAMP_QUOTE = `
   }
 `;
 
-const REFRESH_RAMP_QUOTE = `
-  query ($rampQuote: ID!, $amount: Decimal) {
-    refreshRampQuote(rampQuote: $rampQuote, amount: $amount) {
-      id
-      exchangeRate
-    }
-  }
-`;
+
 
 module.exports = {
   AVAILABLE_COUNTRIES,
@@ -107,5 +100,4 @@ module.exports = {
   PAYMENT_REQUEST,
   ACCOUNT,
   RAMP_QUOTE,
-  REFRESH_RAMP_QUOTE,
 };

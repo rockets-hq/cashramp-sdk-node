@@ -59,8 +59,8 @@ const WITHDRAW_ONCHAIN = `
 `;
 
 const INITIATE_RAMP_QUOTE_DEPOSIT = `
-  mutation ($rampQuote: ID!, $reference: String) {
-    initiateRampQuoteDeposit(rampQuote: $rampQuote, reference: $reference) {
+  mutation ($rampQuote: ID!, $reference: String, $phoneNumber: String, $bankAccountNumber: String) {
+    initiateRampQuoteDeposit(rampQuote: $rampQuote, reference: $reference, phoneNumber: $phoneNumber, bankAccountNumber: $bankAccountNumber) {
       id
       status
       agent
@@ -105,6 +105,16 @@ const CANCEL_DEPOSIT = `
   }
 `;
 
+const REFRESH_RAMP_QUOTE = `
+  mutation ($rampQuote: ID!, $amount: Decimal) {
+    refreshRampQuote(rampQuote: $rampQuote, amount: $amount) {
+      id
+      exchangeRate
+      paymentType
+    }
+  }
+`;
+
 module.exports = {
   CONFIRM_TRANSACTION,
   INITIATE_HOSTED_PAYMENT,
@@ -117,4 +127,5 @@ module.exports = {
   MARK_DEPOSIT_AS_PAID,
   MARK_WITHDRAWAL_AS_RECEIVED,
   CANCEL_DEPOSIT,
+  REFRESH_RAMP_QUOTE,
 };

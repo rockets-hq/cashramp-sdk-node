@@ -15,7 +15,6 @@ const {
   RAMP_LIMITS,
   PAYMENT_REQUEST,
   RAMP_QUOTE,
-  REFRESH_RAMP_QUOTE,
   ACCOUNT,
 } = require("./queries");
 const {
@@ -30,6 +29,7 @@ const {
   MARK_WITHDRAWAL_AS_RECEIVED,
   MARK_DEPOSIT_AS_PAID,
   CANCEL_DEPOSIT,
+  REFRESH_RAMP_QUOTE,
 } = require("./mutations");
 
 class Cashramp {
@@ -132,13 +132,14 @@ class Cashramp {
    * @param {"local_currency"|"usd"} options.currency The currency for the payment request
    * @param {"deposit"|"withdrawal"} options.paymentType The type of payment request
    * @param {string} options.paymentMethodType The payment method type's global ID
+   * @param {string} options.country Optional ISO 3166-2 country code (e.g 'GH', 'NG')
    * @returns {CashrampResponse} response.result { id: string, exchangeRate: string, paymentType: string }
    */
-  async getRampQuote({ customer, amount, currency, paymentType, paymentMethodType }) {
+  async getRampQuote({ customer, amount, currency, paymentType, paymentMethodType, country }) {
     return this.sendRequest({
       name: "rampQuote",
       query: RAMP_QUOTE,
-      variables: { customer, amount, currency, paymentType: paymentType || "deposit", paymentMethodType },
+      variables: { customer, amount, currency, paymentType: paymentType || "deposit", paymentMethodType, country },
     });
   }
 
@@ -146,8 +147,8 @@ class Cashramp {
    * Refresh a Ramp Quote for a Direct Ramp payment
    * @param {object} options
    * @param {string} options.rampQuote The ramp quote's global ID
-   * @param {number} options.amount The amount to ramp
-   * @returns {CashrampResponse} response.result { id: string, exchangeRate: string }
+   * @param {number} options.amount Optional new amount (keeps original if omitted)
+   * @returns {CashrampResponse} response.result { id: string, exchangeRate: string, paymentType: string }
    */
   async refreshRampQuote({ rampQuote, amount }) {
     return this.sendRequest({
@@ -248,13 +249,15 @@ class Cashramp {
    * @param {object} options
    * @param {string} options.rampQuote The ramp quote's global ID
    * @param {string} options.reference An optional reference for the payment request
+   * @param {string} options.phoneNumber Customer's phone number if paying via MoMo
+   * @param {string} options.bankAccountNumber Customer's bank account number if paying via bank
    * @returns {CashrampResponse} response.result { id: string, status: string, agent: string, paymentDetails: string, exchangeRate: string, amountLocal: string, amountUsd: string, expiresAt: string }
    */
-  async initiateRampQuoteDeposit({ rampQuote, reference }) {
+  async initiateRampQuoteDeposit({ rampQuote, reference, phoneNumber, bankAccountNumber }) {
     return this.sendRequest({
       name: "initiateRampQuoteDeposit",
       query: INITIATE_RAMP_QUOTE_DEPOSIT,
-      variables: { rampQuote, reference },
+      variables: { rampQuote, reference, phoneNumber, bankAccountNumber },
     });
   }
 

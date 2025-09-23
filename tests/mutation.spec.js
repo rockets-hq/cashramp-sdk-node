@@ -158,6 +158,48 @@ describe("Cashramp mutations", () => {
     );
   });
 
+  test("it should initiate a Ramp Quote deposit with phone number", async () => {
+    const name = "initiateRampQuoteDeposit";
+    const result = { id: "1" };
+    const payload = {
+      rampQuote: "1",
+      reference: "test_ref_1",
+      phoneNumber: "+233123456789"
+    };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.initiateRampQuoteDeposit(payload);
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(
+      JSON.stringify(payload)
+    );
+  });
+
+  test("it should initiate a Ramp Quote deposit with bank account number", async () => {
+    const name = "initiateRampQuoteDeposit";
+    const result = { id: "1" };
+    const payload = {
+      rampQuote: "1",
+      reference: "test_ref_1",
+      bankAccountNumber: "1234567890"
+    };
+    fetch.mockReturnValue(createGraphQLJSONResponse({ name, result }));
+
+    const response = await client.initiateRampQuoteDeposit(payload);
+    expect(response.success).toBeTruthy();
+    expect(response.result).toBe(result);
+
+    const mockCallIndex = fetch.mock.calls.length - 1;
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(name);
+    expect(fetch.mock.calls[mockCallIndex][1].body).toContain(
+      JSON.stringify(payload)
+    );
+  });
+
   test("it should mark a deposit payment request as paid", async () => {
     const name = "markDepositAsPaid";
     const result = true;
