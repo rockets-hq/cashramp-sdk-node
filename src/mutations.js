@@ -105,16 +105,6 @@ const CANCEL_DEPOSIT = `
   }
 `;
 
-const REFRESH_RAMP_QUOTE = `
-  mutation ($rampQuote: ID!, $amount: Decimal) {
-    refreshRampQuote(rampQuote: $rampQuote, amount: $amount) {
-      id
-      exchangeRate
-      paymentType
-    }
-  }
-`;
-
 module.exports = {
   CONFIRM_TRANSACTION,
   INITIATE_HOSTED_PAYMENT,
@@ -127,5 +117,4 @@ module.exports = {
   MARK_DEPOSIT_AS_PAID,
   MARK_WITHDRAWAL_AS_RECEIVED,
   CANCEL_DEPOSIT,
-  REFRESH_RAMP_QUOTE,
 };

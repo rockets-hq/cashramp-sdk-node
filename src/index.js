@@ -16,6 +16,7 @@ const {
   PAYMENT_REQUEST,
   RAMP_QUOTE,
   ACCOUNT,
+  REFRESH_RAMP_QUOTE,
 } = require("./queries");
 const {
   CONFIRM_TRANSACTION,
@@ -29,7 +30,6 @@ const {
   MARK_WITHDRAWAL_AS_RECEIVED,
   MARK_DEPOSIT_AS_PAID,
   CANCEL_DEPOSIT,
-  REFRESH_RAMP_QUOTE,
 } = require("./mutations");
 
 class Cashramp {

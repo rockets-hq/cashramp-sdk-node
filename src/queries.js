@@ -89,6 +89,16 @@ const RAMP_QUOTE = `
   }
 `;
 
+const REFRESH_RAMP_QUOTE = `
+  query ($rampQuote: ID!, $amount: Decimal) {
+    refreshRampQuote(rampQuote: $rampQuote, amount: $amount) {
+      id
+      exchangeRate
+      paymentType
+    }
+  }
+`;
+
 
 
 module.exports = {
@@ -100,4 +110,5 @@ module.exports = {
   PAYMENT_REQUEST,
   ACCOUNT,
   RAMP_QUOTE,
+  REFRESH_RAMP_QUOTE,
 };
