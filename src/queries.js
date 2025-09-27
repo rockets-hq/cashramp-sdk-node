@@ -99,8 +99,6 @@ const REFRESH_RAMP_QUOTE = `
   }
 `;
 
-
-
 module.exports = {
   AVAILABLE_COUNTRIES,
   MARKET_RATE,
