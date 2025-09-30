@@ -131,7 +131,7 @@ class Cashramp {
    * @param {number} options.amount The amount to ramp
    * @param {"local_currency"|"usd"} options.currency The currency for the payment request
    * @param {"deposit"|"withdrawal"} options.paymentType The type of payment request
-   * @param {string} options.paymentMethodType The payment method type's global ID
+   * @param {string} options.paymentMethodType The payment method type's identifier
    * @param {string} options.country Optional ISO 3166-2 country code (e.g 'GH', 'NG')
    * @returns {CashrampResponse} response.result { id: string, exchangeRate: string, paymentType: string }
    */
