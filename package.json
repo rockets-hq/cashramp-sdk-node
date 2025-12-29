@@ -1,5 +1,5 @@
 {
-  "name": "cashramp-sdk-node",
+  "name": "cashramp",
   "version": "0.0.12",
   "description": "Cashramp API NodeJS SDK",
   "main": "src/index.js",
@@ -29,5 +29,9 @@
     "type": "git",
     "url": "git+https://github.com/rockets-hq/cashramp-sdk-node.git"
   },
-  "homepage": "https://cashramp.co/commerce"
+  "homepage": "https://cashramp.co/commerce",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }
