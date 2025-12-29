@@ -29,4 +29,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
 
       - name: Publish package to NPM
-        run: npm publish --provenance --access public
+        run: npm publish
