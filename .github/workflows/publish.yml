@@ -2,12 +2,16 @@ name: Publish NPM Package
 on:
   push:
     branches: main
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -23,8 +27,8 @@ jobs:
 
           npm version patch
 
-      - name: Push updated package + tag to GitHub
-        run: git push && git push --tags
+      - name: Push updated package
+        run: git push
         env:
           GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
 
