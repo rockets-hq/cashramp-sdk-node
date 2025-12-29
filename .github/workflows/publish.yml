@@ -5,11 +5,16 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Bump package version
         run: |
@@ -24,6 +29,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB_TOKEN }}
 
       - name: Publish package to NPM
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
