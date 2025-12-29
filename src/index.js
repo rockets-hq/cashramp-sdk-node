@@ -251,13 +251,17 @@ class Cashramp {
    * @param {string} options.reference An optional reference for the payment request
    * @param {string} options.phoneNumber Customer's phone number if paying via MoMo
    * @param {string} options.bankAccountNumber Customer's bank account number if paying via bank
+   * @param {object} options.onchainTransferInfo Optional object for onchain stablecoin delivery
+   * @param {string} options.onchainTransferInfo.address Wallet address to receive stablecoins
+   * @param {string} options.onchainTransferInfo.cryptocurrency Cryptocurrency identifier (e.g., "usd_tether")
+   * @param {string} options.onchainTransferInfo.network Network to deliver on (e.g., "celo")
    * @returns {CashrampResponse} response.result { id: string, status: string, agent: string, paymentDetails: string, exchangeRate: string, amountLocal: string, amountUsd: string, expiresAt: string }
    */
-  async initiateRampQuoteDeposit({ rampQuote, reference, phoneNumber, bankAccountNumber }) {
+  async initiateRampQuoteDeposit({ rampQuote, reference, phoneNumber, bankAccountNumber, onchainTransferInfo }) {
     return this.sendRequest({
       name: "initiateRampQuoteDeposit",
       query: INITIATE_RAMP_QUOTE_DEPOSIT,
-      variables: { rampQuote, reference, phoneNumber, bankAccountNumber },
+      variables: { rampQuote, reference, phoneNumber, bankAccountNumber, onchainTransferInfo },
     });
   }
 

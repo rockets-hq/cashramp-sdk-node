@@ -59,8 +59,8 @@ const WITHDRAW_ONCHAIN = `
 `;
 
 const INITIATE_RAMP_QUOTE_DEPOSIT = `
-  mutation ($rampQuote: ID!, $reference: String, $phoneNumber: String, $bankAccountNumber: String) {
-    initiateRampQuoteDeposit(rampQuote: $rampQuote, reference: $reference, phoneNumber: $phoneNumber, bankAccountNumber: $bankAccountNumber) {
+  mutation ($rampQuote: ID!, $reference: String, $phoneNumber: String, $bankAccountNumber: String, $onchainTransferInfo: OnchainTransferInfo) {
+    initiateRampQuoteDeposit(rampQuote: $rampQuote, reference: $reference, phoneNumber: $phoneNumber, bankAccountNumber: $bankAccountNumber, onchainTransferInfo: $onchainTransferInfo) {
       id
       status
       agent
