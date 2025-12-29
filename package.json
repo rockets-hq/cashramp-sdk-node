@@ -1,6 +1,6 @@
 {
-  "name": "cashramp",
-  "version": "0.0.12",
+  "name": "cashramp-sdk-node",
+  "version": "0.0.11",
   "description": "Cashramp API NodeJS SDK",
   "main": "src/index.js",
   "files": [
