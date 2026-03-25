@@ -37,8 +37,8 @@ const CREATE_CUSTOMER = `
 `;
 
 const ADD_PAYMENT_METHOD = `
-  mutation ($customer: ID!, $paymentMethodType: String!, $fields: [P2PPaymentMethodFieldInput!]!) {
-    addPaymentMethod(customer: $customer, paymentMethodType: $paymentMethodType, fields: $fields) {
+  mutation ($customer: ID!, $paymentMethodType: String!, $fields: [P2PPaymentMethodFieldInput!]!, $ownership: P2PPaymentMethodOwnership) {
+    addPaymentMethod(customer: $customer, paymentMethodType: $paymentMethodType, fields: $fields, ownership: $ownership) {
       id
       value
       fields {
@@ -50,8 +50,8 @@ const ADD_PAYMENT_METHOD = `
 `;
 
 const WITHDRAW_ONCHAIN = `
-  mutation ($address: String!, $amountUsd: Decimal!) {
-    withdrawOnchain(address: $address, amountUsd: $amountUsd) {
+  mutation ($address: String!, $amountUsd: Decimal!, $network: String, $metadata: JSON) {
+    withdrawOnchain(address: $address, amountUsd: $amountUsd, network: $network, metadata: $metadata) {
       id
       status
     }

@@ -44,7 +44,7 @@ class Cashramp {
     this._env = env || process.env.CASHRAMP_ENV || "live";
     if (!["test", "live"].includes(this._env))
       throw new Error(
-        `"${this._env}" is not a valid env. Can either be "test" or "live".`
+        `"${this._env}" is not a valid env. Can either be "test" or "live".`,
       );
 
     this._secretKey = secretKey || process.env.CASHRAMP_SECRET_KEY;
@@ -135,11 +135,25 @@ class Cashramp {
    * @param {string} options.country Optional ISO 3166-2 country code (e.g 'GH', 'NG')
    * @returns {CashrampResponse} response.result { id: string, exchangeRate: string, paymentType: string }
    */
-  async getRampQuote({ customer, amount, currency, paymentType, paymentMethodType, country }) {
+  async getRampQuote({
+    customer,
+    amount,
+    currency,
+    paymentType,
+    paymentMethodType,
+    country,
+  }) {
     return this.sendRequest({
       name: "rampQuote",
       query: RAMP_QUOTE,
-      variables: { customer, amount, currency, paymentType: paymentType || "deposit", paymentMethodType, country },
+      variables: {
+        customer,
+        amount,
+        currency,
+        paymentType: paymentType || "deposit",
+        paymentMethodType,
+        country,
+      },
     });
   }
 
@@ -257,11 +271,23 @@ class Cashramp {
    * @param {string} options.onchainTransferInfo.network Network to deliver on (e.g., "celo")
    * @returns {CashrampResponse} response.result { id: string, status: string, agent: string, paymentDetails: string, exchangeRate: string, amountLocal: string, amountUsd: string, expiresAt: string }
    */
-  async initiateRampQuoteDeposit({ rampQuote, reference, phoneNumber, bankAccountNumber, onchainTransferInfo }) {
+  async initiateRampQuoteDeposit({
+    rampQuote,
+    reference,
+    phoneNumber,
+    bankAccountNumber,
+    onchainTransferInfo,
+  }) {
     return this.sendRequest({
       name: "initiateRampQuoteDeposit",
       query: INITIATE_RAMP_QUOTE_DEPOSIT,
-      variables: { rampQuote, reference, phoneNumber, bankAccountNumber, onchainTransferInfo },
+      variables: {
+        rampQuote,
+        reference,
+        phoneNumber,
+        bankAccountNumber,
+        onchainTransferInfo,
+      },
     });
   }
 
@@ -353,13 +379,14 @@ class Cashramp {
    * @param {string} options.customer The customer's global ID
    * @param {string} options.paymentMethodType Identifier of the payment method type to add
    * @param {[PaymentMethodField]} options.fields The fields of the payment method
+   * @param {"first_party"|"third_party"} options.ownership The ownership of the payment method
    * @returns {CashrampResponse}
    */
-  async addPaymentMethod({ customer, paymentMethodType, fields }) {
+  async addPaymentMethod({ customer, paymentMethodType, fields, ownership }) {
     return this.sendRequest({
       name: "addPaymentMethod",
       query: ADD_PAYMENT_METHOD,
-      variables: { customer, paymentMethodType, fields },
+      variables: { customer, paymentMethodType, fields, ownership },
     });
   }
 
@@ -368,13 +395,15 @@ class Cashramp {
    * @param {object} options
    * @param {string} options.address The wallet address to withdraw to
    * @param {number} options.amountUsd The amount to withdraw to the address provided
+   * @param {string} options.network The network to withdraw from
+   * @param {object} options.metadata The metadata of the withdrawal
    * @returns {CashrampResponse}
    */
-  async withdrawOnchain({ address, amountUsd }) {
+  async withdrawOnchain({ address, amountUsd, network, metadata }) {
     return this.sendRequest({
       name: "withdrawOnchain",
       query: WITHDRAW_ONCHAIN,
-      variables: { address, amountUsd },
+      variables: { address, amountUsd, network, metadata },
     });
   }
 
