@@ -99,6 +99,22 @@ const REFRESH_RAMP_QUOTE = `
   }
 `;
 
+const ONCHAIN_WITHDRAWAL = `
+  query ($withdrawalId: ID!) {
+    onchainWithdrawal(id: $withdrawalId) {
+      quantity
+      symbol
+      network
+      address
+      txhash
+      txhashUrl
+      fee
+      status
+      createdAt
+    }
+  }
+`
+
 module.exports = {
   AVAILABLE_COUNTRIES,
   MARKET_RATE,
@@ -109,4 +125,5 @@ module.exports = {
   ACCOUNT,
   RAMP_QUOTE,
   REFRESH_RAMP_QUOTE,
+  ONCHAIN_WITHDRAWAL,
 };

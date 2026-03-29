@@ -180,6 +180,20 @@ class Cashramp {
     return this.sendRequest({ name: "account", query: ACCOUNT });
   }
 
+  /**
+   * Fetch the onchain withdrawal information for the authenticated user.
+   * @param {object} options
+   * @param {string} options.id The onchain withdrawal's global ID
+   * @returns {CashrampResponse} response.result { quantity: string, symbol: string, network: string, address: string, txhash: string, txhashUrl: string, fee: string, status: string, createdAt: string }
+   */
+  async getOnchainWithdrawal({ withdrawalId }) {
+    return this.sendRequest({
+      name: "onchainWithdrawal",
+      query: ONCHAIN_WITHDRAWAL,
+      variables: { id },
+    });
+  }
+
   // MUTATIONS
 
   /**
