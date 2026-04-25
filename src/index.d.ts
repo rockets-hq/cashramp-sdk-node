@@ -269,6 +269,144 @@ declare module 'cashramp' {
     query: string;
     /** (Optional) Variables for the GraphQL query */
     variables?: Record<string, any>;
+    /** (Optional) Which Cashramp schema to target. Defaults to "merchant". */
+    endpoint?: 'merchant' | 'bot';
+  }
+
+  /** Pagination metadata returned by paginated bot agent endpoints */
+  export interface BotAgentPagination {
+    page: number;
+    perPage: number;
+    total: number;
+  }
+
+  /** A bot agent profile (operationally useful subset of CashrampAgentProfile) */
+  export interface BotAgentProfile {
+    id: string;
+    email: string;
+    accountBalance: string;
+    escrowBalance: string;
+    bonusEarnings: string;
+    depositAddress: string;
+    verificationStatus: string;
+    autoUpdateDepositRate: boolean;
+    autoUpdateWithdrawalRate: boolean;
+    creditLine: string;
+    usedCreditLine: string;
+    depositMargin: string;
+    withdrawalMargin: string;
+    averageDepositRate: string;
+    averageWithdrawalRate: string;
+    depositsCompleted: number;
+    withdrawalsCompleted: number;
+    totalDepositFiatAmount: string;
+    totalDepositUsdAmount: string;
+    totalWithdrawalFiatAmount: string;
+    totalWithdrawalUsdAmount: string;
+    enforceReceiptUpload: boolean;
+    apiKey: string;
+  }
+
+  /** A P2P payment row from the bot agent order history */
+  export interface BotAgentP2PPayment {
+    id: string;
+    status: string;
+    paymentType: PaymentType;
+    exchangeRate: string;
+    exchangeRateMinusSurcharge: string;
+    orderId: string;
+    source: string;
+    instant: boolean;
+    createdAt: string;
+    expiresAt: string;
+    expiresAtSecs: number;
+    reassigning: boolean;
+    reassignAfter: string;
+    reassignAfterSecs: number;
+    agentCutOfFees: string;
+    fxSpreadRevenue: string;
+  }
+
+  /** Order history filter passed to getBotAgentOrderHistory */
+  export interface BotAgentOrderHistoryFilter {
+    orderId?: string;
+    status?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    paymentMethod?: string;
+  }
+
+  /** Options for getBotAgentOrderHistory */
+  export interface GetBotAgentOrderHistoryOptions {
+    page: number;
+    perPage?: number;
+    filter?: BotAgentOrderHistoryFilter;
+  }
+
+  /** Paginated bot agent order history result */
+  export interface BotAgentOrderHistory {
+    data: BotAgentP2PPayment[];
+    pagination: BotAgentPagination;
+  }
+
+  /** Options for getBotAgentWithdrawalInfo */
+  export interface GetBotAgentWithdrawalInfoOptions {
+    /** The crypto symbol (e.g. "USDC") */
+    symbol: string;
+  }
+
+  /** Withdrawal info returned for a crypto symbol */
+  export interface BotAgentWithdrawalInfo {
+    symbol: string;
+    networks: string[];
+    addressRegex?: string;
+    memoRegex?: string;
+  }
+
+  /** Options for accept/cancel bot agent withdrawal and mark deposit received */
+  export interface BotAgentP2PPaymentOptions {
+    /** The P2P payment's global ID */
+    paymentRequest: string;
+  }
+
+  /** Options for markBotAgentWithdrawalPaid */
+  export interface MarkBotAgentWithdrawalPaidOptions {
+    /** The P2P payment's global ID */
+    paymentRequest: string;
+    /** The payment method's global ID the agent paid from */
+    paymentMethod: string;
+    /** Optional receipt string */
+    receipt?: string;
+  }
+
+  /** Options for updateBotAgentRates. All fields optional; only provided keys are sent. */
+  export interface UpdateBotAgentRatesOptions {
+    depositRate?: number | string;
+    depositMargin?: number | string;
+    withdrawalRate?: number | string;
+    withdrawalMargin?: number | string;
+  }
+
+  /** Options for updateBotAgentPaymentMethodLiquidity */
+  export interface UpdateBotAgentPaymentMethodLiquidityOptions {
+    /** Required local-currency amount */
+    amountLocal: number | string;
+    /** Optional existing payment method global ID */
+    paymentMethod?: string;
+    /** Optional payment method type identifier */
+    paymentMethodType?: string;
+  }
+
+  /** A P2P payment method as returned by the bot agent liquidity mutation */
+  export interface BotAgentP2PPaymentMethod {
+    id: string;
+    value: string;
+    displayValue: string;
+    localCurrencyAvailable: string;
+    deleted: boolean;
+    ownership: string;
+    designation: string;
+    instant: boolean;
   }
 
   export class Cashramp {
@@ -413,6 +551,62 @@ declare module 'cashramp' {
      * @returns Promise resolving to CashrampResponse (result type might need clarification from API)
      */
     withdrawOnchain(options: WithdrawOnchainOptions): Promise<CashrampResponse>;
+
+    /**
+     * Fetch the authenticated bot agent's profile
+     * @returns Promise resolving to CashrampResponse with BotAgentProfile
+     */
+    getBotAgentProfile(): Promise<CashrampResponse<BotAgentProfile>>;
+
+    /**
+     * Fetch the bot agent's order history (page/perPage pagination)
+     * @param options Page, perPage, and optional filter
+     * @returns Promise resolving to CashrampResponse with BotAgentOrderHistory
+     */
+    getBotAgentOrderHistory(options: GetBotAgentOrderHistoryOptions): Promise<CashrampResponse<BotAgentOrderHistory>>;
+
+    /**
+     * Fetch withdrawal info for a crypto symbol (used by bot agents before paying out onchain)
+     * @param options Crypto symbol
+     * @returns Promise resolving to CashrampResponse with BotAgentWithdrawalInfo
+     */
+    getBotAgentWithdrawalInfo(options: GetBotAgentWithdrawalInfoOptions): Promise<CashrampResponse<BotAgentWithdrawalInfo>>;
+
+    /**
+     * Accept an assigned withdrawal request as a bot agent
+     * @param options P2P payment global ID
+     */
+    acceptBotAgentWithdrawal(options: BotAgentP2PPaymentOptions): Promise<CashrampResponse<boolean>>;
+
+    /**
+     * Cancel/decline an assigned withdrawal request as a bot agent
+     * @param options P2P payment global ID
+     */
+    cancelBotAgentWithdrawal(options: BotAgentP2PPaymentOptions): Promise<CashrampResponse<boolean>>;
+
+    /**
+     * Acknowledge receipt of customer fiat for a deposit leg as a bot agent
+     * @param options P2P payment global ID
+     */
+    markBotAgentDepositReceived(options: BotAgentP2PPaymentOptions): Promise<CashrampResponse<boolean>>;
+
+    /**
+     * Acknowledge sending fiat for a withdrawal leg as a bot agent
+     * @param options P2P payment global ID, paying payment method, and optional receipt
+     */
+    markBotAgentWithdrawalPaid(options: MarkBotAgentWithdrawalPaidOptions): Promise<CashrampResponse<boolean>>;
+
+    /**
+     * Update bot agent rates and margins (only provided fields are sent)
+     * @param options Optional rate/margin fields
+     */
+    updateBotAgentRates(options?: UpdateBotAgentRatesOptions): Promise<CashrampResponse<boolean>>;
+
+    /**
+     * Set the local-currency liquidity available for a bot agent payment method
+     * @param options Local currency amount and identifier (paymentMethod or paymentMethodType)
+     */
+    updateBotAgentPaymentMethodLiquidity(options: UpdateBotAgentPaymentMethodLiquidityOptions): Promise<CashrampResponse<BotAgentP2PPaymentMethod>>;
 
     /**
      * Query the Cashramp API directly

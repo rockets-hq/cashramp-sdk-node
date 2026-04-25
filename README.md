@@ -20,6 +20,7 @@ The official NodeJS SDK for [Cashramp's API](https://cashramp.co/commerce).
   - [Hosted Payments](#hosted-payments)
   - [Direct Ramp - Deposits](#direct-ramp---deposits)
   - [Direct Ramp - Withdrawals](#direct-ramp---withdrawals)
+  - [Bot Agents](#bot-agents)
 - [API Reference](#api-reference)
   - [Queries](#queries)
   - [Mutations](#mutations)
@@ -180,6 +181,50 @@ await cashramp.markWithdrawalAsReceived({
 });
 ```
 
+### Bot Agents
+
+If your secret key is bound to an Agent (not a merchant), the SDK can drive a bot agent end-to-end against Cashramp's bot agent GraphQL surface. Bot agent methods automatically target `/cashramp/bot/graphql` (the merchant endpoint at `/cashramp/api/graphql` is unaffected). The same `secretKey` constructor argument is used.
+
+```js
+const cashramp = new Cashramp({
+  env: "test",
+  secretKey: "CSHRMP-SECK_your_agent_secret_key", // an APIKey whose bearer is an Agent
+});
+
+// 1. Inspect the agent profile
+const profile = await cashramp.getBotAgentProfile();
+
+// 2. Set deposit/withdrawal rates and margins
+await cashramp.updateBotAgentRates({
+  depositRate: 1500,
+  withdrawalRate: 1490,
+  depositMargin: 0.005,
+});
+
+// 3. Top up local-currency liquidity for one of your payment methods
+await cashramp.updateBotAgentPaymentMethodLiquidity({
+  paymentMethod: "pm_global_id",
+  amountLocal: 5_000_000,
+});
+
+// 4. Page through assigned orders
+const orders = await cashramp.getBotAgentOrderHistory({
+  page: 1,
+  perPage: 20,
+  filter: { status: "pending" },
+});
+
+// 5. Accept an assigned withdrawal, then mark it paid after sending fiat
+const assignment = orders.result.data[0];
+await cashramp.acceptBotAgentWithdrawal({ paymentRequest: assignment.id });
+
+await cashramp.markBotAgentWithdrawalPaid({
+  paymentRequest: assignment.id,
+  paymentMethod: "pm_global_id",
+  receipt: "https://example.com/receipt.png",
+});
+```
+
 ## API Reference
 
 ### Queries
@@ -244,6 +289,22 @@ await cashramp.markWithdrawalAsReceived({
 | --------------------------------------------------------- | --------------------------------- |
 | `confirmTransaction({ paymentRequest, transactionHash })` | Confirm crypto transfer to escrow |
 | `withdrawOnchain({ address, amountUsd })`                 | Withdraw from balance to wallet   |
+
+#### Bot Agents
+
+All bot agent methods target `/cashramp/bot/graphql` and require a `secretKey` whose bearer APIKey is an Agent record. `paymentRequest` accepts a P2P payment global ID and is mapped to the GraphQL `p2pPayment` argument internally.
+
+| Method                                                                                              | Returns                          | Description                                                                |
+| --------------------------------------------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------------------------- |
+| `getBotAgentProfile()`                                                                              | `BotAgentProfile`                | Authenticated agent profile (id, balances, rates, margins, counts, ...)    |
+| `getBotAgentOrderHistory({ page, perPage?, filter? })`                                              | `{ data, pagination }`           | Page/perPage paginated P2P payments. Filter: `orderId/status/dateFrom/dateTo/paymentMethod` |
+| `getBotAgentWithdrawalInfo({ symbol })`                                                             | `WithdrawalInfo`                 | Onchain destination/network info for a crypto symbol                       |
+| `acceptBotAgentWithdrawal({ paymentRequest })`                                                      | `boolean`                        | Accept an assigned withdrawal request                                      |
+| `cancelBotAgentWithdrawal({ paymentRequest })`                                                      | `boolean`                        | Cancel/decline an assigned withdrawal request                              |
+| `markBotAgentDepositReceived({ paymentRequest })`                                                   | `boolean`                        | Acknowledge receipt of customer fiat for a deposit leg                     |
+| `markBotAgentWithdrawalPaid({ paymentRequest, paymentMethod, receipt? })`                           | `boolean`                        | Acknowledge sending fiat for a withdrawal leg (`paymentMethod` required)   |
+| `updateBotAgentRates({ depositRate?, depositMargin?, withdrawalRate?, withdrawalMargin? })`         | `boolean`                        | Set agent rates/margins (only provided keys are sent)                      |
+| `updateBotAgentPaymentMethodLiquidity({ amountLocal, paymentMethod?, paymentMethodType? })`         | `P2PPaymentMethod`               | Set local-currency liquidity for a payment method                          |
 
 #### onchainTransferInfo Object
 
