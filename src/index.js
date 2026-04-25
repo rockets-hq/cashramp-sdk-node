@@ -17,6 +17,9 @@ const {
   RAMP_QUOTE,
   ACCOUNT,
   REFRESH_RAMP_QUOTE,
+  BOT_AGENT_PROFILE,
+  BOT_AGENT_ORDER_HISTORY,
+  BOT_AGENT_WITHDRAWAL_INFO,
 } = require("./queries");
 const {
   CONFIRM_TRANSACTION,
@@ -30,6 +33,12 @@ const {
   MARK_WITHDRAWAL_AS_RECEIVED,
   MARK_DEPOSIT_AS_PAID,
   CANCEL_DEPOSIT,
+  BOT_AGENT_ACCEPT_WITHDRAWAL,
+  BOT_AGENT_CANCEL_WITHDRAWAL,
+  BOT_AGENT_MARK_DEPOSIT_AS_RECEIVED,
+  BOT_AGENT_MARK_WITHDRAWAL_AS_PAID,
+  BOT_AGENT_UPDATE_RATES,
+  BOT_AGENT_UPDATE_PAYMENT_METHOD_LIQUIDITY,
 } = require("./mutations");
 
 class Cashramp {
@@ -407,6 +416,158 @@ class Cashramp {
     });
   }
 
+  // ---------- BOT AGENT ----------
+
+  /**
+   * Fetch the authenticated bot agent's profile
+   * @returns {CashrampResponse} response.result The agent profile
+   */
+  async getBotAgentProfile() {
+    return this.sendRequest({
+      name: "profile",
+      query: BOT_AGENT_PROFILE,
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Fetch the bot agent's order history
+   * @param {object} options
+   * @param {number} options.page The 1-indexed page number
+   * @param {number} options.perPage Optional results per page (default 10)
+   * @param {object} options.filter Optional filter ({ orderId, status, dateFrom, dateTo, paymentMethod })
+   * @returns {CashrampResponse} response.result { data: [P2PPayment], pagination: { page, perPage, total } }
+   */
+  async getBotAgentOrderHistory({ page, perPage, filter } = {}) {
+    return this.sendRequest({
+      name: "orderHistory",
+      query: BOT_AGENT_ORDER_HISTORY,
+      variables: { page, perPage, filter },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Fetch withdrawal info (networks, address regex, etc.) for a crypto symbol
+   * @param {object} options
+   * @param {string} options.symbol The crypto symbol (e.g. "USDC")
+   * @returns {CashrampResponse}
+   */
+  async getBotAgentWithdrawalInfo({ symbol }) {
+    return this.sendRequest({
+      name: "withdrawalInfo",
+      query: BOT_AGENT_WITHDRAWAL_INFO,
+      variables: { symbol },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Accept an assigned withdrawal request as a bot agent
+   * @param {object} options
+   * @param {string} options.paymentRequest The P2P payment's global ID
+   * @returns {CashrampResponse}
+   */
+  async acceptBotAgentWithdrawal({ paymentRequest }) {
+    return this.sendRequest({
+      name: "acceptWithdrawal",
+      query: BOT_AGENT_ACCEPT_WITHDRAWAL,
+      variables: { p2pPayment: paymentRequest },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Cancel/decline an assigned withdrawal request as a bot agent
+   * @param {object} options
+   * @param {string} options.paymentRequest The P2P payment's global ID
+   * @returns {CashrampResponse}
+   */
+  async cancelBotAgentWithdrawal({ paymentRequest }) {
+    return this.sendRequest({
+      name: "cancelWithdrawal",
+      query: BOT_AGENT_CANCEL_WITHDRAWAL,
+      variables: { p2pPayment: paymentRequest },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Acknowledge receipt of customer fiat for a deposit leg as a bot agent
+   * @param {object} options
+   * @param {string} options.paymentRequest The P2P payment's global ID
+   * @returns {CashrampResponse}
+   */
+  async markBotAgentDepositReceived({ paymentRequest }) {
+    return this.sendRequest({
+      name: "markDepositAsReceived",
+      query: BOT_AGENT_MARK_DEPOSIT_AS_RECEIVED,
+      variables: { p2pPayment: paymentRequest },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Acknowledge sending fiat for a withdrawal leg as a bot agent
+   * @param {object} options
+   * @param {string} options.paymentRequest The P2P payment's global ID
+   * @param {string} options.paymentMethod The payment method's global ID the agent paid from
+   * @param {string} options.receipt Optional receipt string
+   * @returns {CashrampResponse}
+   */
+  async markBotAgentWithdrawalPaid({ paymentRequest, paymentMethod, receipt }) {
+    return this.sendRequest({
+      name: "markWithdrawalAsPaid",
+      query: BOT_AGENT_MARK_WITHDRAWAL_AS_PAID,
+      variables: { p2pPayment: paymentRequest, paymentMethod, receipt },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Update bot agent rates and margins. Only provided fields are sent.
+   * @param {object} options
+   * @param {number|string} options.depositRate Optional deposit rate
+   * @param {number|string} options.depositMargin Optional deposit margin
+   * @param {number|string} options.withdrawalRate Optional withdrawal rate
+   * @param {number|string} options.withdrawalMargin Optional withdrawal margin
+   * @returns {CashrampResponse}
+   */
+  async updateBotAgentRates({
+    depositRate,
+    depositMargin,
+    withdrawalRate,
+    withdrawalMargin,
+  } = {}) {
+    return this.sendRequest({
+      name: "updateRates",
+      query: BOT_AGENT_UPDATE_RATES,
+      variables: { depositRate, depositMargin, withdrawalRate, withdrawalMargin },
+      endpoint: "bot",
+    });
+  }
+
+  /**
+   * Set the local-currency liquidity available for a bot agent payment method
+   * @param {object} options
+   * @param {number|string} options.amountLocal Required local currency amount
+   * @param {string} options.paymentMethod Optional existing payment method global ID
+   * @param {string} options.paymentMethodType Optional payment method type identifier
+   * @returns {CashrampResponse} response.result The updated P2P payment method
+   */
+  async updateBotAgentPaymentMethodLiquidity({
+    amountLocal,
+    paymentMethod,
+    paymentMethodType,
+  }) {
+    return this.sendRequest({
+      name: "updatePaymentMethodLiquidity",
+      query: BOT_AGENT_UPDATE_PAYMENT_METHOD_LIQUIDITY,
+      variables: { amountLocal, paymentMethod, paymentMethodType },
+      endpoint: "bot",
+    });
+  }
+
   // GENERAL
   /**
    * Query the Cashramp API directly
@@ -414,11 +575,13 @@ class Cashramp {
    * @param {string} options.name The name of the query/mutation
    * @param {string} options.query The GraphQL query string
    * @param {object} options.variables (Optional) Pass in variables for the GraphQL query
+   * @param {"merchant"|"bot"} options.endpoint (Optional) Which Cashramp schema to target. Defaults to "merchant".
    * @returns {CashrampResponse}
    */
-  async sendRequest({ name, query, variables }) {
+  async sendRequest({ name, query, variables, endpoint }) {
+    const url = endpoint === "bot" ? this._botApiURL : this._apiURL;
     try {
-      const response = await fetch(this._apiURL, {
+      const response = await fetch(url, {
         method: "post",
         body: JSON.stringify({
           query,
@@ -452,6 +615,7 @@ class Cashramp {
     let host = "api.useaccrue.com";
     if (this._env == "test") host = `staging.${host}`;
     this._apiURL = `https://${host}/cashramp/api/graphql`;
+    this._botApiURL = `https://${host}/cashramp/bot/graphql`;
   }
 }
 

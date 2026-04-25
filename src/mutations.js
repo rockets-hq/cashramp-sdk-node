@@ -105,6 +105,53 @@ const CANCEL_DEPOSIT = `
   }
 `;
 
+// ---------- Bot Agent ----------
+
+const BOT_AGENT_ACCEPT_WITHDRAWAL = `
+  mutation ($p2pPayment: ID!) {
+    acceptWithdrawal(p2pPayment: $p2pPayment)
+  }
+`;
+
+const BOT_AGENT_CANCEL_WITHDRAWAL = `
+  mutation ($p2pPayment: ID!) {
+    cancelWithdrawal(p2pPayment: $p2pPayment)
+  }
+`;
+
+const BOT_AGENT_MARK_DEPOSIT_AS_RECEIVED = `
+  mutation ($p2pPayment: ID!) {
+    markDepositAsReceived(p2pPayment: $p2pPayment)
+  }
+`;
+
+const BOT_AGENT_MARK_WITHDRAWAL_AS_PAID = `
+  mutation ($p2pPayment: ID!, $paymentMethod: ID!, $receipt: String) {
+    markWithdrawalAsPaid(p2pPayment: $p2pPayment, paymentMethod: $paymentMethod, receipt: $receipt)
+  }
+`;
+
+const BOT_AGENT_UPDATE_RATES = `
+  mutation ($depositRate: Decimal, $depositMargin: Decimal, $withdrawalRate: Decimal, $withdrawalMargin: Decimal) {
+    updateRates(depositRate: $depositRate, depositMargin: $depositMargin, withdrawalRate: $withdrawalRate, withdrawalMargin: $withdrawalMargin)
+  }
+`;
+
+const BOT_AGENT_UPDATE_PAYMENT_METHOD_LIQUIDITY = `
+  mutation ($paymentMethod: ID, $paymentMethodType: String, $amountLocal: Decimal!) {
+    updatePaymentMethodLiquidity(paymentMethod: $paymentMethod, paymentMethodType: $paymentMethodType, amountLocal: $amountLocal) {
+      id
+      value
+      displayValue
+      localCurrencyAvailable
+      deleted
+      ownership
+      designation
+      instant
+    }
+  }
+`;
+
 module.exports = {
   CONFIRM_TRANSACTION,
   INITIATE_HOSTED_PAYMENT,
@@ -117,4 +164,10 @@ module.exports = {
   MARK_DEPOSIT_AS_PAID,
   MARK_WITHDRAWAL_AS_RECEIVED,
   CANCEL_DEPOSIT,
+  BOT_AGENT_ACCEPT_WITHDRAWAL,
+  BOT_AGENT_CANCEL_WITHDRAWAL,
+  BOT_AGENT_MARK_DEPOSIT_AS_RECEIVED,
+  BOT_AGENT_MARK_WITHDRAWAL_AS_PAID,
+  BOT_AGENT_UPDATE_RATES,
+  BOT_AGENT_UPDATE_PAYMENT_METHOD_LIQUIDITY,
 };

@@ -99,6 +99,79 @@ const REFRESH_RAMP_QUOTE = `
   }
 `;
 
+// ---------- Bot Agent ----------
+
+const BOT_AGENT_PROFILE = `
+  query {
+    profile {
+      id
+      email
+      accountBalance
+      escrowBalance
+      bonusEarnings
+      depositAddress
+      verificationStatus
+      autoUpdateDepositRate
+      autoUpdateWithdrawalRate
+      creditLine
+      usedCreditLine
+      depositMargin
+      withdrawalMargin
+      averageDepositRate
+      averageWithdrawalRate
+      depositsCompleted
+      withdrawalsCompleted
+      totalDepositFiatAmount
+      totalDepositUsdAmount
+      totalWithdrawalFiatAmount
+      totalWithdrawalUsdAmount
+      enforceReceiptUpload
+      apiKey
+    }
+  }
+`;
+
+const BOT_AGENT_ORDER_HISTORY = `
+  query ($filter: OrderHistoryFilter, $page: Int!, $perPage: Int) {
+    orderHistory(filter: $filter, page: $page, perPage: $perPage) {
+      data {
+        id
+        status
+        paymentType
+        exchangeRate
+        exchangeRateMinusSurcharge
+        orderId
+        source
+        instant
+        createdAt
+        expiresAt
+        expiresAtSecs
+        reassigning
+        reassignAfter
+        reassignAfterSecs
+        agentCutOfFees
+        fxSpreadRevenue
+      }
+      pagination {
+        page
+        perPage
+        total
+      }
+    }
+  }
+`;
+
+const BOT_AGENT_WITHDRAWAL_INFO = `
+  query ($symbol: String!) {
+    withdrawalInfo(symbol: $symbol) {
+      symbol
+      networks
+      addressRegex
+      memoRegex
+    }
+  }
+`;
+
 module.exports = {
   AVAILABLE_COUNTRIES,
   MARKET_RATE,
@@ -109,4 +182,7 @@ module.exports = {
   ACCOUNT,
   RAMP_QUOTE,
   REFRESH_RAMP_QUOTE,
+  BOT_AGENT_PROFILE,
+  BOT_AGENT_ORDER_HISTORY,
+  BOT_AGENT_WITHDRAWAL_INFO,
 };
