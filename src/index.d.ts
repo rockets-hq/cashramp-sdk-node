@@ -121,7 +121,8 @@ declare module 'cashramp' {
   /** Represents the account information for the authenticated user */
   export interface AccountInfo {
     accountBalance: string;
-    depositAddress: string;
+    /** Null until an onchain deposit address has been provisioned for the account */
+    depositAddress: string | null;
   }
 
   /** Options for fetching the market rate */

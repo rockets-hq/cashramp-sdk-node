@@ -174,7 +174,7 @@ class Cashramp {
 
   /**
    * Fetch the account information for the authenticated user.
-   * @returns {CashrampResponse} response.result { accountBalance: string, depositAddress: string }
+   * @returns {CashrampResponse} response.result { accountBalance: string, depositAddress: string | null }
    */
   async getAccount() {
     return this.sendRequest({ name: "account", query: ACCOUNT });
